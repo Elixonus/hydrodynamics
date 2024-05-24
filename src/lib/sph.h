@@ -6,12 +6,12 @@ struct s {
 	double v[3];
 };
 
-int n;
-struct s *s;
+extern int n;
+extern struct s *s;
 
-double (*w)(double r[3]);
-double *(*gw)(double r[3], double b[3]);
-double *(*lw)(double r[3], double b[3]);
+extern double (*w)(double r[3]);
+extern double *(*gw)(double r[3], double b[3]);
+extern double *(*lw)(double r[3], double b[3]);
 
 double d(double r[3]);
 double p(double r[3]);

@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 struct s {
 	double m;
 	double d;
@@ -65,6 +67,7 @@ double *v(double r[3], double b[3])
 	{
 		b[c] = vr[c];
 	}
+	printf("hi: \n");
 	return b;
 }
 
@@ -119,3 +122,4 @@ double *lv(double r[3], double b[3])
 	}
 	return b;
 }
+

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/sph.h"
+#include "lib/ker.h"
+
 
 int main(void)
 {
@@ -17,4 +19,9 @@ int main(void)
 		particles[1].r[c] = r2[c];
 		particles[2].r[c] = r3[c];
 	}
+	double r[3] = {0.0, 0.0, 0.0};
+	double vr[3];
+	v(r, vr);
+	printf("v(r): <%f, %f, %f>\n", vr[0], vr[1], vr[2]);
+
 }
