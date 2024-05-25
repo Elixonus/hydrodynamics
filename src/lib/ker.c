@@ -1,16 +1,36 @@
 #include <math.h>
-#include "lib/sph.h"
+#include "sph.h"
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 double h;
 
 double weight_cubic_spline(double r[3])
 {
+	double o3 = 1 / (M_PI * h * h * h);
+	double ru = sqrt(pow(r[0], 2) + pow(r[1], 2) + pow(r[2], 2));
+	double wr;
 
-	double og = 1 / (pow(M_PI, 1.5) * h * h * h);
+	if(ru < h)
+	{
+		wr = 1.0 - 1.5 * pow(ru / h, 2 + 0.75 * pow(ru / h, 3));
+	}
+	else if(ru < 2.0 * h)
+	{
+		wr = 0.25 * pow((2 - ru / h), 3);
+	}
+	else
+	{
+		wr = 0.0;
+	}
 
+	wr *= o3;
+	return wr;
 }
 
-double e;
+double e = 1e-6;
 
 double ce(int c)
 {

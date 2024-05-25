@@ -60,14 +60,14 @@ double *v(double r[3], double b[3])
 		double wr = w(rw);
 		for(int c = 0; c < 3; c++)
 		{
-			vr[c] += s[i].m * s[i].v[c] / s[i].d;
+			vr[c] += s[i].m * s[i].v[c] / s[i].d * wr;
 		}
 	}
 	for(int c = 0; c < 3; c++)
 	{
 		b[c] = vr[c];
 	}
-	printf("hi: \n");
+	printf("hi: %f\n", vr[0]);
 	return b;
 }
 
@@ -122,4 +122,3 @@ double *lv(double r[3], double b[3])
 	}
 	return b;
 }
-
