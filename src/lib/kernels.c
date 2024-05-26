@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <math.h>
 #include "sph.h"
 
@@ -9,7 +10,7 @@ double h;
 
 double weight_cubic_spline(double r[3])
 {
-	double o3 = 1 / (M_PI * h * h * h);
+	double o3 = 1.0 / (M_PI * h * h * h);
 	double ru = sqrt(pow(r[0], 2) + pow(r[1], 2) + pow(r[2], 2));
 	double wr;
 
@@ -27,6 +28,25 @@ double weight_cubic_spline(double r[3])
 	}
 
 	wr *= o3;
+	return wr;
+}
+
+double weight_gaussian(double r[3])
+{
+	double og = 1.0 / (pow(M_PI, 1.5) * pow(h, 3));
+	double ru = sqrt(pow(r[0], 2) + pow(r[1], 2) + pow(r[2], 2));
+	double q = ru / h;
+	double wr;
+
+	if(q < 3)
+	{
+		wr = og * exp(-pow(q, 2));
+	}
+	else
+	{
+		wr = 0.0;
+	}
+
 	return wr;
 }
 

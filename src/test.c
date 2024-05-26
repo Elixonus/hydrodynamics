@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "lib/sph.h"
-#include "lib/ker.h"
+#include "lib/kernels.h"
 
 
 struct weight_scheme {
@@ -10,42 +11,58 @@ struct weight_scheme {
 	double *(*laplacian_weight_function)(double r[3], double b[3]);
 };
 
-void test_weight_function(struct weight_scheme *weight_scheme)
+void test_weight_function(double (*weight_function)(double r[3]))
 {
-	double maxk = 4.0;
-	double length = 2 * maxk * h;
-	double volume = 0.0;
-	int nx = 100, ny = nx, nz = nx;
-	double infinitesimal = (length / nx) * (length / ny) * (length / nz);
+	double error = 0.0;
 
-	for(int ix = 0; ix < nx; ix++)
+	double maxk = 5.0;
+	int nh = 10;
+
+	for(int ih = 0; ih < nh; ih++)
 	{
-		double x = (((double) ix) / (nx - 1) - 0.5) * length;
-		for(int iy = 0; iy < ny; iy++)
+		h = pow(10, 3.0 * ((int) ih) / (nh - 1) - 2.0); // 0.01 to 10
+		double length = 2 * maxk * h;
+		int nx = 100, ny = nx, nz = nx;
+		double infinitesimal = (length / nx) * (length / ny) * (length / nz);
+		double volume = 0.0;
+
+		for(int ix = 0; ix < nx; ix++)
 		{
-			double y = (((double) iy) / (ny - 1) - 0.5) * length;
-			for(int iz = 0; iz < nz; iz++)
+			double x = (((double) ix) / nx - 0.5) * length;
+			for(int iy = 0; iy < ny; iy++)
 			{
-				double z = (((double) iz) / (nz - 1) - 0.5) * length;
-				double r[3] = {x, y, z};
-				double wr = weight_scheme->weight_function(r);
-				volume += wr * infinitesimal;
+				double y = (((double) iy) / ny - 0.5) * length;
+				for(int iz = 0; iz < nz; iz++)
+				{
+					double z = (((double) iz) / nz - 0.5) * length;
+					double r[3] = {x, y, z};
+					double wr = weight_function(r);
+					// printf("h: %f, wr: %f, r: <%f, %f, %f>\n", h, wr, r[0], r[1], r[2]);
+					volume += wr * infinitesimal;
+				}
 			}
 		}
+
+		error += fabs(volume - 1.0) * 100.0 * nh;
 	}
-	printf("volume: %f\n", volume);
+
+	printf("weight volume error = %lf%%\n", error);
+}
+
+void test_gradient_weight_function(double *(*gradient_weight_function)(double r[3], double b[3]))
+{
+
 }
 
 void test_weight_scheme(struct weight_scheme *weight_scheme)
 {
-	test_weight_function(weight_scheme);
+	test_weight_function(weight_scheme->weight_function);
 }
 
 int main(void)
 {
-	h = 1.0;
 	struct weight_scheme weight_schemes[10] = {
 		{weight_cubic_spline, gradient_weight_auto, laplacian_weight_auto}
 	};
-	test_weight_function(&weight_schemes[0]);
+	test_weight_function(weight_schemes[0].weight_function);
 }
