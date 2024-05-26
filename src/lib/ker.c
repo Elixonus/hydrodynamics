@@ -15,7 +15,7 @@ double weight_cubic_spline(double r[3])
 
 	if(ru < h)
 	{
-		wr = 1.0 - 1.5 * pow(ru / h, 2 + 0.75 * pow(ru / h, 3));
+		wr = 1.0 - 1.5 * pow(ru / h, 2) + 0.75 * pow(ru / h, 3);
 	}
 	else if(ru < 2.0 * h)
 	{
