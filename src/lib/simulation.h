@@ -1,3 +1,7 @@
+extern double clength;
+
+void partition_particles(void);
+
 void compute_densities(void);
 
 extern double d0;
