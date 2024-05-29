@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include "sph.h"
-#include "storage.h"
-#include "memory.h"
 #include "kernels.h"
 #include "integrators.h"
-
+#include "storage.h"
+#include "memory.h"
 
 
 void compute_densities(void)
@@ -35,7 +34,7 @@ void compute_pressures(void)
 double u;
 double *(*acceleration_external)(double r[3], double b[3]);
 
-void compute_acceleration(void)
+void compute_accelerations(void)
 {
 	for(int i = 0; i < n; i++)
 	{
@@ -52,12 +51,14 @@ void compute_acceleration(void)
 	}
 }
 
-
-void (*integrator)(struct particle *, double dt);
+void (*integrator)(struct particle *particle, double dt);
 
 void integrate_particles(double dt)
 {
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < pcount; i++)
+	{
+		integrator(&particles[i], dt);
+	}
 }
 
 double t;
@@ -65,3 +66,22 @@ double dt;
 int nt;
 void (*initial_conditions)(void);
 void (*boundary_conditions)(void);
+
+void simulate_particles(int resume)
+{
+	if(resume == 0)
+	{
+		t = 0.0;
+		initial_conditions();
+	}
+	for(int it = 0; it < nt; it++)
+	{
+		partition_particles();
+		compute_densities();
+		compute_pressures();
+		compute_accelerations();
+		integrate_particles(dt);
+		t += dt;
+		boundary_conditions();
+	}
+}

@@ -1,3 +1,6 @@
+#ifndef SPH_H
+#define SPH_H
+
 struct s {
 	double m;
 	double d;
@@ -18,3 +21,5 @@ double p(double r[3]);
 double *v(double r[3], double b[3]);
 double *gp(double r[3], double b[3]);
 double *lv(double r[3], double b[3]);
+
+#endif

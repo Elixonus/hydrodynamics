@@ -1,3 +1,6 @@
+#ifndef STORAGE_H
+#define STORAGE_H
+#include <stdlib.h>
 #include "sph.h"
 
 struct particle {
@@ -20,10 +23,14 @@ struct cell {
 
 extern int pid;
 extern int pcount;
-extern size_t pmemory
+extern size_t pmemory;
 extern struct particle *particles;
 
 extern int cid;
 extern int ccount[3];
 extern size_t cmemory;
 extern struct cell ***cells;
+
+extern size_t smemory;
+
+#endif
