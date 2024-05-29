@@ -85,11 +85,24 @@ double y;
 
 void compute_pressures(void)
 {
-	for(int i = 0; i < n; i++)
+	for(int x = 0; x < ccount[0]; x++)
 	{
-		double dr = s[i].d;
-		double pr = p0 * (pow(dr / d0, y) - 1);
-		s[i].p = pr;
+		for(int y = 0; y < ccount[1]; y++)
+		{
+			for(int z = 0; z < ccount[2]; z++)
+			{
+				struct cell *cell = &cells[x][y][z];
+				prepare_particles(cell);
+
+				for(int i = 0; i < cell->pcount; i++)
+				{
+					struct particle *particle = cell->particles[i];
+					double dr = particle->basic.d;
+					double pr = p0 * (pow(dr / d0, y) - 1);
+					particle->basic.p = pr;
+				}
+			}
+		}
 	}
 }
 
@@ -98,17 +111,30 @@ double *(*acceleration_external)(double r[3], double b[3]);
 
 void compute_accelerations(void)
 {
-	for(int i = 0; i < n; i++)
+	for(int x = 0; x < ccount[0]; x++)
 	{
-		double gpr[3];
-		gp(s[i].r, gpr);
-		double lvr[3];
-		lv(s[i].r, lvr);
-		double aer[3];
-		acceleration_external(s[i].r, aer);
-		for(int j = 0; j < 3; j++)
+		for(int y = 0; y < ccount[1]; y++)
 		{
-			a[i][j] = aer[j] - gpr[j] / s[i].d + lvr[j] * u / s[i].d;
+			for(int z = 0; z < ccount[2]; z++)
+			{
+				struct cell *cell = &cells[x][y][z];
+				prepare_particles(cell);
+
+				for(int i = 0; i < cell->pcount; i++)
+				{
+					struct particle *particle = cell->particles[i];
+					double gpr[3];
+					gp(particle->basic.r, gpr);
+					double lvr[3];
+					lv(particle->basic.r, lvr);
+					double aer[3];
+					acceleration_external(particle->basic.r, aer);
+					for(int j = 0; j < 3; j++)
+					{
+						particle->a[j] = aer[j] - gpr[j] / particle->basic.d + lvr[j] * u / particle->basic.d;
+					}
+				}
+			}
 		}
 	}
 }
