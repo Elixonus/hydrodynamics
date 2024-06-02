@@ -7,9 +7,9 @@
 #include "storage.h"
 #include "memory.h"
 
-double clength;
 
-void partition_particles()
+
+void partition_particles(void)
 {
 	for(int x = 0; x < ccount[0]; x++)
 	{
@@ -18,7 +18,7 @@ void partition_particles()
 			for(int z = 0; z < ccount[2]; z++)
 			{
 				struct cell *cell = &cells[x][y][z];
-				cell.pcount = 0;
+				cell->pcount = 0;
 			}
 		}
 	}

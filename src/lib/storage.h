@@ -15,7 +15,7 @@ struct particle {
 struct cell {
 	int id;
 	double length;
-	double position[3];
+	double center[3];
 	int pcount;
 	size_t pmemory;
 	struct particle **particles;
@@ -27,8 +27,9 @@ extern size_t pmemory;
 extern struct particle *particles;
 
 extern int cid;
+extern double clength;
 extern int ccount[3];
-extern size_t cmemory;
+extern size_t cmemory[3];
 extern struct cell ***cells;
 
 extern size_t smemory;

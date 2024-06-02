@@ -11,6 +11,27 @@ void allocate_particles(void)
 		fprintf(stderr, "failed to allocate particles with %dB of memory\n", (int)(pmemory));
 		exit(EXIT_FAILURE);
 	}
+	pid = 0;
+	for(int i = 0; i < pmemory / sizeof(struct particle); i++)
+	{
+		struct particle *particle = &particles[i];
+		particle->id = pid++;
+		for(int j = 0; j < 3; j++)
+		{
+			particle->color[j] = 1.0;
+			particle->a[j] = 0.0;
+		}
+		particle->radius = 0.0;
+		particle->volume = 0.0;
+		particle->basic.m = 0.0;
+		particle->basic.d = 0.0;
+		particle->basic.p = 0.0;
+		for(int j = 0; j < 3; j++)
+		{
+			particle->basic.r[j] = 0.0;
+			particle->basic.v[j] = 0.0;
+		}
+	}
 	printf("allocated %d particles with %dB of memory\n", (int)(pmemory / sizeof(struct particle)), (int)(pmemory));
 }
 
@@ -74,25 +95,46 @@ void deallocate_cparticles(struct cell *cell)
 
 void allocate_cells(void)
 {
-	cmemory = ccount[0] * ccount[1] * ccount[2] * sizeof(struct cell);
-	cells = malloc(cmemory);
+	cmemory[0] = ccount[0] * sizeof(struct cell **);
+	cells = malloc(cmemory[0]);
 	if(cells == NULL)
 	{
-		fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory));
+		fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[0]));
 		exit(EXIT_FAILURE);
 	}
+	cid = 0;
 	for(int x = 0; x < ccount[0]; x++)
 	{
+		cmemory[1] = ccount[1] * sizeof(struct cell *);
+		cells[x] = malloc(cmemory[1]);
+		if(cells[x] == NULL)
+		{
+			fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[1]));
+			exit(EXIT_FAILURE);
+		}
 		for(int y = 0; y < ccount[1]; y++)
 		{
+			cmemory[2] = ccount[2] * sizeof(struct cell);
+			cells[x][y] = malloc(cmemory[2]);
+			if(cells[x][y] == NULL)
+			{
+				fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[2]));
+				exit(EXIT_FAILURE);
+			}
 			for(int z = 0; z < ccount[2]; z++)
 			{
 				struct cell *cell = &cells[x][y][z];
+				cell->id = cid++;
+				cell->length = clength;
+				cell->center[0] = ((double)(x) + 0.5) * clength;
+				cell->center[1] = ((double)(y) + 0.5) * clength;
+				cell->center[2] = ((double)(z) + 0.5) * clength;
+				cell->pcount = 0;
 				allocate_cparticles(cell);
 			}
 		}
 	}
-	printf("allocated %dx%dx%d cells with %dB of memory\n", ccount[0], ccount[1], ccount[2], (int)(cmemory));
+	printf("allocated %dx%dx%d cells with %dB of memory\n", ccount[0], ccount[1], ccount[2], (int)(cmemory[0]));
 }
 
 void deallocate_cells(void)
@@ -106,12 +148,15 @@ void deallocate_cells(void)
 				struct cell *cell = &cells[x][y][z];
 				deallocate_cparticles(cell);
 			}
+			free(cells[x][y]);
 		}
+		free(cells[x]);
 	}
-
 	free(cells);
-	printf("deallocated %dx%dx%d cells with %dB of memory\n", ccount[0], ccount[1], ccount[2], (int)(cmemory));
-	cmemory = 0;
+	printf("deallocated %dx%dx%d cells with %dB of memory\n", ccount[0], ccount[1], ccount[2], (int)(cmemory[0]));
+	cmemory[0] = 0;
+	cmemory[1] = 0;
+	cmemory[2] = 0;
 }
 
 void allocate_sparticles(void)
@@ -122,6 +167,17 @@ void allocate_sparticles(void)
 	{
 		fprintf(stderr, "failed to allocate basic particles with %dB of memory\n", (int)(smemory));
 		exit(EXIT_FAILURE);
+	}
+	for(int i = 0; i < smemory / sizeof(struct s); i++)
+	{
+		s[i].m = 0.0;
+		s[i].d = 0.0;
+		s[i].p = 0.0;
+		for(int j = 0; j < 3; j++)
+		{
+			s[i].r[j] = 0.0;
+			s[i].v[j] = 0.0;
+		}
 	}
 	printf("allocated %d basic particles with %dB of memory\n", (int)(smemory / sizeof(struct s)), (int)(smemory));
 }

@@ -19,14 +19,15 @@ struct cell {
 	struct particle **particles;
 };
 
-int pid = 0;
+int pid;
 int pcount;
 size_t pmemory;
 struct particle *particles;
 
-int cid = 0;
+int cid;
+double clength;
 int ccount[3];
-size_t cmemory;
+size_t cmemory[3];
 struct cell ***cells;
 
 size_t smemory;
