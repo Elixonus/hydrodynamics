@@ -3,7 +3,6 @@
 
 struct particle {
 	int id;
-	double color[3];
 	double radius;
 	double volume;
 	struct s basic;
@@ -13,7 +12,7 @@ struct particle {
 struct cell {
 	int id;
 	double length;
-	double position[3];
+	double center[3];
 	int pcount;
 	size_t pmemory;
 	struct particle **particles;

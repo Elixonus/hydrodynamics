@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include "sph.h"
 #include "kernels.h"
@@ -43,6 +44,7 @@ void partition_particles(void)
 		struct cell *cell = &cells[c[0]][c[1]][c[2]];
 		reallocate_cparticles(cell);
 		cell->particles[cell->pcount] = &particles[i];
+		cell->pcount++;
 	}
 }
 
@@ -50,6 +52,7 @@ void prepare_particles(struct cell *cell)
 {
 	// temporary implementation, should take into account neighbors as well later.
 	n = cell->pcount;
+	printf("cell->pcount = %d\n", n);
 	reallocate_sparticles();
 	for(int i = 0; i < cell->pcount; i++)
 	{
@@ -80,8 +83,7 @@ void compute_densities(void)
 }
 
 double d0;
-double p0;
-double y;
+double k;
 
 void compute_pressures(void)
 {
@@ -98,7 +100,7 @@ void compute_pressures(void)
 				{
 					struct particle *particle = cell->particles[i];
 					double dr = particle->basic.d;
-					double pr = p0 * (pow(dr / d0, y) - 1);
+					double pr = k * (dr - d0);
 					particle->basic.p = pr;
 				}
 			}
@@ -127,8 +129,11 @@ void compute_accelerations(void)
 					gp(particle->basic.r, gpr);
 					double lvr[3];
 					lv(particle->basic.r, lvr);
-					double aer[3];
-					acceleration_external(particle->basic.r, aer);
+					double aer[3] = {0.0, 0.0, 0.0};
+					if(acceleration_external != NULL)
+					{
+						acceleration_external(particle->basic.r, aer);
+					}
 					for(int j = 0; j < 3; j++)
 					{
 						particle->a[j] = aer[j] - gpr[j] / particle->basic.d + lvr[j] * u / particle->basic.d;
@@ -155,21 +160,27 @@ int nt;
 void (*initial_conditions)(void);
 void (*boundary_conditions)(void);
 
-void simulate_particles(int resume)
+void simulate_particles(bool resume)
 {
-	if(resume == 0)
+	if(resume == false)
 	{
 		t = 0.0;
-		initial_conditions();
+		if(initial_conditions != NULL)
+		{
+			initial_conditions();
+		}
 	}
 	for(int it = 0; it < nt; it++)
 	{
 		partition_particles();
 		compute_densities();
-		compute_pressures();
+		/*compute_pressures();
 		compute_accelerations();
 		integrate_particles(dt);
 		t += dt;
-		boundary_conditions();
+		if(boundary_conditions != NULL)
+		{
+			boundary_conditions();
+		}*/
 	}
 }

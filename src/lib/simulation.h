@@ -1,3 +1,6 @@
+#ifndef SIMULATION_H
+#define SIMULATION_H
+
 extern double clength;
 
 void partition_particles(void);
@@ -5,8 +8,7 @@ void partition_particles(void);
 void compute_densities(void);
 
 extern double d0;
-extern double p0;
-extern double y;
+extern double k;
 
 void compute_pressures(void);
 
@@ -26,3 +28,5 @@ extern void (*initial_conditions)(void);
 extern void (*boundary_conditions)(void);
 
 void simulate_particles(int resume);
+
+#endif

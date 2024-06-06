@@ -5,7 +5,6 @@
 
 struct particle {
 	int id;
-	double color[3];
 	double radius;
 	double volume;
 	struct s basic;
