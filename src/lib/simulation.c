@@ -23,13 +23,13 @@ void partition_particles(void)
 			}
 		}
 	}
-
 	for(int i = 0; i < pcount; i++)
 	{
+		struct particle *particle = &particles[i];
 		int c[3];
 		for(int j = 0; j < 3; j++)
 		{
-			c[j] = (int)(floor(particles[i].basic.r[j] / clength));
+			c[j] = (int)(floor(particle->basic.r[j] / clength));
 
 			if(c[j] < 0)
 			{
@@ -40,11 +40,10 @@ void partition_particles(void)
 				c[j] = ccount[j] - 1;
 			}
 		}
-
 		struct cell *cell = &cells[c[0]][c[1]][c[2]];
-		reallocate_cparticles(cell);
-		cell->particles[cell->pcount] = &particles[i];
 		cell->pcount++;
+		reallocate_cparticles(cell);
+		cell->particles[cell->pcount - 1] = &particles[i];
 	}
 }
 
@@ -52,7 +51,6 @@ void prepare_particles(struct cell *cell)
 {
 	// temporary implementation, should take into account neighbors as well later.
 	n = cell->pcount;
-	printf("cell->pcount = %d\n", n);
 	reallocate_sparticles();
 	for(int i = 0; i < cell->pcount; i++)
 	{
@@ -162,6 +160,29 @@ void (*boundary_conditions)(void);
 
 void simulate_particles(bool resume)
 {
+	if(particles == NULL)
+	{
+		fprintf(stderr, "error: particles not allocated\n");
+		exit(EXIT_FAILURE);
+	}
+	if(cells == NULL)
+	{
+		fprintf(stderr, "error: cells not allocated\n");
+	}
+	if(s == NULL)
+	{
+		fprintf(stderr, "error: basic particles not allocated\n");
+	}
+	if(w == NULL || gw == NULL || lw == NULL)
+	{
+		fprintf(stderr, "error: not all weight function pointers set\n");
+		exit(EXIT_FAILURE);
+	}
+	if(integrator == NULL)
+	{
+		fprintf(stderr, "error: integrator function pointer not set\n");
+		exit(EXIT_FAILURE);
+	}
 	if(resume == false)
 	{
 		t = 0.0;
@@ -174,13 +195,13 @@ void simulate_particles(bool resume)
 	{
 		partition_particles();
 		compute_densities();
-		/*compute_pressures();
+		compute_pressures();
 		compute_accelerations();
 		integrate_particles(dt);
 		t += dt;
 		if(boundary_conditions != NULL)
 		{
 			boundary_conditions();
-		}*/
+		}
 	}
 }

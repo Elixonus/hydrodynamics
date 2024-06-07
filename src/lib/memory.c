@@ -24,7 +24,7 @@ void allocate_particles(void)
 	particles = malloc(pmemory);
 	if(particles == NULL)
 	{
-		fprintf(stderr, "failed to allocate particles with %dB of memory\n", (int)(pmemory));
+		fprintf(stderr, "error: failed to allocate particles with %dB of memory\n", (int)(pmemory));
 		exit(EXIT_FAILURE);
 	}
 	pid = 0;
@@ -44,7 +44,7 @@ void reallocate_particles(void)
 		struct particle *swap = realloc(particles, pmemory);
 		if(swap == NULL)
 		{
-			fprintf(stderr, "failed to reallocate particles with %dB of memory\n", (int)(pmemory));
+			fprintf(stderr, "error: failed to reallocate particles with %dB of memory\n", (int)(pmemory));
 			exit(EXIT_FAILURE);
 		}
 		for(int i = pcount; i < pmemory / sizeof(struct particle); i++)
@@ -70,7 +70,7 @@ void allocate_cparticles(struct cell *cell)
 	cell->particles = malloc(cell->pmemory);
 	if(cell->particles == NULL)
 	{
-		fprintf(stderr, "failed to allocate cell particles with %dB of memory\n", (int)(cell->pmemory));
+		fprintf(stderr, "error: failed to allocate cell particles with %dB of memory\n", (int)(cell->pmemory));
 		exit(EXIT_FAILURE);
 	}
 	// printf("allocated %d cell particles with %dB of memory\n", (int)(cell->pmemory / sizeof(struct particle *)), (int)(cell->pmemory));
@@ -84,12 +84,8 @@ void reallocate_cparticles(struct cell *cell)
 		struct particle **swap = realloc(cell->particles, cell->pmemory);
 		if(swap == NULL)
 		{
-			fprintf(stderr, "failed to reallocate cell particles with %dB of memory\n", (int)(cell->pmemory));
+			fprintf(stderr, "error: failed to reallocate cell particles with %dB of memory\n", (int)(cell->pmemory));
 			exit(EXIT_FAILURE);
-		}
-		for(int i = cell->pcount; i < cell->pmemory / sizeof(struct particle *); i++)
-		{
-			cell->particles[i] = NULL;
 		}
 		// printf("reallocated to %d cell particles with %dB of memory\n", (int)(cell->pmemory / sizeof(struct particle *)), (int)(cell->pmemory));
 		cell->particles = swap;
@@ -122,7 +118,7 @@ void allocate_cells(void)
 	cells = malloc(cmemory[0]);
 	if(cells == NULL)
 	{
-		fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[0]));
+		fprintf(stderr, "error: failed to allocate cells with %dB of memory\n", (int)(cmemory[0]));
 		exit(EXIT_FAILURE);
 	}
 	cid = 0;
@@ -132,7 +128,7 @@ void allocate_cells(void)
 		cells[x] = malloc(cmemory[1]);
 		if(cells[x] == NULL)
 		{
-			fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[1]));
+			fprintf(stderr, "error: failed to allocate cells with %dB of memory\n", (int)(cmemory[1]));
 			exit(EXIT_FAILURE);
 		}
 		for(int y = 0; y < ccount[1]; y++)
@@ -141,7 +137,7 @@ void allocate_cells(void)
 			cells[x][y] = malloc(cmemory[2]);
 			if(cells[x][y] == NULL)
 			{
-				fprintf(stderr, "failed to allocate cells with %dB of memory\n", (int)(cmemory[2]));
+				fprintf(stderr, "error: failed to allocate cells with %dB of memory\n", (int)(cmemory[2]));
 				exit(EXIT_FAILURE);
 			}
 			for(int z = 0; z < ccount[2]; z++)
@@ -198,7 +194,7 @@ void allocate_sparticles(void)
 	s = malloc(smemory);
 	if(s == NULL)
 	{
-		fprintf(stderr, "failed to allocate basic particles with %dB of memory\n", (int)(smemory));
+		fprintf(stderr, "error: failed to allocate basic particles with %dB of memory\n", (int)(smemory));
 		exit(EXIT_FAILURE);
 	}
 	for(int i = 0; i < smemory / sizeof(struct s); i++)
@@ -217,7 +213,7 @@ void reallocate_sparticles(void)
 		struct s *swap = realloc(s, smemory);
 		if(swap == NULL)
 		{
-			fprintf(stderr, "failed to reallocate basic particles with %dB of memory\n", (int)(smemory));
+			fprintf(stderr, "error: failed to reallocate basic particles with %dB of memory\n", (int)(smemory));
 			exit(EXIT_FAILURE);
 		}
 		for(int i = n; i < smemory / sizeof(struct s); i++)

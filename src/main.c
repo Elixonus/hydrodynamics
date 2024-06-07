@@ -44,6 +44,11 @@ int main(void)
 {
 	printf("main program started\n");
 
+	h = 0.1;
+	w = weight_cubic_spline;
+	gw = gradient_weight_auto;
+	lw = laplacian_weight_auto;
+
 	pcount = 100;
 	allocate_particles();
 
@@ -136,13 +141,16 @@ int main(void)
 		cairo_restore(context);
 
 		cairo_destroy(context);
-		cairo_surface_write_to_png (surface, "example.png");
+		char filename[25];
+		sprintf(filename, "out/%05d.png", f);
+		printf("%s\n", filename);
+		cairo_surface_write_to_png(surface, filename);
 		cairo_surface_destroy(surface);
-
 
 		simulate_particles(true);
 	}
 
+	deallocate_sparticles();
 	deallocate_cells();
 	deallocate_particles();
 

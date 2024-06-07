@@ -67,7 +67,6 @@ double *v(double r[3], double b[3])
 	{
 		b[c] = vr[c];
 	}
-	printf("hi: %f\n", vr[0]);
 	return b;
 }
 
