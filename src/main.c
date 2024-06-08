@@ -25,15 +25,52 @@ void randomize_particles(void)
 	for(int i = 0; i < pcount; i++)
 	{
 		struct particle *particle = &particles[i];
+		particle->basic.m = 1.0 / pcount;
 		for(int j = 0; j < 3; j++)
 		{
-			particle->basic.m = 0.01;
-			particle->basic.d = 1000.0;
 			particle->basic.r[j] = ((double)(rand())) / RAND_MAX;
-			particle->volume = particle->basic.m / particle->basic.d;
-			particle->radius = cbrt(0.75 * particle->volume / M_PI);
 		}
 	}
+}
+
+void update_particles_volrad(void)
+{
+	for(int i = 0; i < pcount; i++)
+	{
+		struct particle *particle = &particles[i];
+		particle->volume = particle->basic.m / particle->basic.d;
+		//particle->radius = cbrt(0.75 * particle->volume / M_PI);
+		particle->radius = 0.05;
+	}
+}
+
+void correct_particles(void)
+{
+	for(int i = 0; i < pcount; i++)
+	{
+		struct particle *particle = &particles[i];
+		for(int j = 0; j < 3; j++)
+		{
+			if(particle->basic.r[j] < 0.0)
+			{
+				particle->basic.r[j] = 0.0;
+			}
+			else if(particle->basic.r[j] > clength * ccount[j])
+			{
+				particle->basic.r[j] = clength * ccount[j];
+			}
+		}
+	}
+}
+
+double *acceleration_gravity(double r[3], double b[3])
+{
+	double ag[3] = {0, -0.1, 0};
+	for(int j = 0; j < 3; j++)
+	{
+		b[j] = ag[j];
+	}
+	return b;
 }
 
 int width = 1000;
@@ -44,7 +81,7 @@ int main(void)
 {
 	printf("main program started\n");
 
-	h = 0.1;
+	h = 0.2;
 	w = weight_cubic_spline;
 	gw = gradient_weight_auto;
 	lw = laplacian_weight_auto;
@@ -61,8 +98,8 @@ int main(void)
 	n = 100;
 	allocate_sparticles();
 
-	k = 1.0;
-	d0 = 1000.0;
+	k = 0.001;
+	d0 = 1.0;
 	u = 0.0;
 	t = 0.0;
 	dt = 0.01;
@@ -70,9 +107,18 @@ int main(void)
 	acceleration_external = NULL;
 	integrator = integrate_euler_explicit;
 	initial_conditions = randomize_particles;
+	boundary_conditions = correct_particles;
+	acceleration_external = acceleration_gravity;
 
 	simulate_particles(false);
 	nt = 10;
+
+	compute_densities();/*
+	for(int i = 0; i < pcount; i++)
+	{
+		struct particle *particle = &particles[i];
+		printf("id=%d m=%f d=%f\n", particle->id, particle->basic.m, particle->basic.d);
+	}*/
 
 	/*printf("particles\n");
 	for(int i = 0; i < pcount; i++)
@@ -93,6 +139,10 @@ int main(void)
 
 	for(int f = 0; f < 100; f++)
 	{
+		update_particles_volrad();
+
+		printf("frame:%d\n", f);
+
 		cairo_surface_t *surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, width, height);
 		cairo_t *context = cairo_create(surface);
 
@@ -142,8 +192,7 @@ int main(void)
 
 		cairo_destroy(context);
 		char filename[25];
-		sprintf(filename, "out/%05d.png", f);
-		printf("%s\n", filename);
+		sprintf(filename, "out/img/%05d.png", f);
 		cairo_surface_write_to_png(surface, filename);
 		cairo_surface_destroy(surface);
 

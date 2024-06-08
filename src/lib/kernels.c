@@ -10,43 +10,91 @@ double h;
 
 double weight_cubic_spline(double r[3])
 {
-	double o3 = 1.0 / (M_PI * h * h * h);
-	double ru = sqrt(pow(r[0], 2) + pow(r[1], 2) + pow(r[2], 2));
+	double o3 = 1.0 / (M_PI * pow(h, 3.0));
+	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
+	double q = mr / h;
 	double wr;
-
-	if(ru < h)
+	if(q < 1.0)
 	{
-		wr = 1.0 - 1.5 * pow(ru / h, 2) + 0.75 * pow(ru / h, 3);
+		wr = 1.0 - 1.5 * pow(q, 2.0) + 0.75 * pow(q, 3.0);
 	}
-	else if(ru < 2.0 * h)
+	else if(q < 2.0)
 	{
-		wr = 0.25 * pow((2 - ru / h), 3);
+		wr = 0.25 * pow((2.0 - q), 3.0);
 	}
 	else
 	{
 		wr = 0.0;
 	}
-
 	wr *= o3;
 	return wr;
 }
 
 double weight_gaussian(double r[3])
 {
-	double og = 1.0 / (pow(M_PI, 1.5) * pow(h, 3));
-	double ru = sqrt(pow(r[0], 2) + pow(r[1], 2) + pow(r[2], 2));
-	double q = ru / h;
+	double og = 1.0 / (pow(M_PI, 1.5) * pow(h, 3.0));
+	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
+	double q = mr / h;
 	double wr;
-
-	if(q < 3)
+	if(q < 3.0)
 	{
-		wr = og * exp(-pow(q, 2));
+		wr = og * exp(-pow(q, 2.0));
 	}
 	else
 	{
 		wr = 0.0;
 	}
+	return wr;
+}
 
+double weight_poly6(double r[3])
+{
+	double og = 315.0 / (64.0 * M_PI * pow(h, 9.0));
+	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
+	double wr;
+	if(mr <= h)
+	{
+		wr = pow(pow(h, 2.0) - pow(mr, 2.0), 3.0);
+	}
+	else
+	{
+		wr = 0.0;
+	}
+	wr *= og;
+	return wr;
+}
+
+double weight_spiky(double r[3])
+{
+	double og = 15.0 / (M_PI * pow(h, 6.0));
+	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
+	double wr;
+	if(mr < h)
+	{
+		wr = pow(h - mr, 3.0);
+	}
+	else
+	{
+		wr = 0.0;
+	}
+	wr *= og;
+	return wr;
+}
+
+double weight_viscous(double r[3])
+{
+	double og = 15.0 / (2.0 * M_PI * pow(h, 3.0));
+	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
+	double wr;
+	if(mr < h)
+	{
+		wr = 0.0 - pow(mr, 3.0) / (2.0 * pow(h, 3.0)) - pow(mr, 2.0) / (2.0 * pow(h, 2.0)) + h / (2.0 * mr) - 1.0;
+	}
+	else
+	{
+		wr = 0.0;
+	}
+	wr *= og;
 	return wr;
 }
 

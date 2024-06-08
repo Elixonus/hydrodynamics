@@ -50,12 +50,17 @@ void partition_particles(void)
 void prepare_particles(struct cell *cell)
 {
 	// temporary implementation, should take into account neighbors as well later.
-	n = cell->pcount;
+	n = pcount;
+	for(int i = 0; i < pcount; i++)
+	{
+		s[i] = particles[i].basic;
+	}
+/*	n = cell->pcount;
 	reallocate_sparticles();
 	for(int i = 0; i < cell->pcount; i++)
 	{
 		s[i] = cell->particles[i]->basic;
-	}
+	}*/
 }
 
 void compute_densities(void)
@@ -144,11 +149,14 @@ void compute_accelerations(void)
 
 void (*integrator)(struct particle *particle, double dt);
 
-void integrate_particles(double dt)
+void integrate_particles(double dt, int nt)
 {
-	for(int i = 0; i < pcount; i++)
+	for(int it = 0; it < nt; it++)
 	{
-		integrator(&particles[i], dt);
+		for(int i = 0; i < pcount; i++)
+		{
+			integrator(&particles[i], dt / nt);
+		}
 	}
 }
 
@@ -197,7 +205,7 @@ void simulate_particles(bool resume)
 		compute_densities();
 		compute_pressures();
 		compute_accelerations();
-		integrate_particles(dt);
+		integrate_particles(dt, 100);
 		t += dt;
 		if(boundary_conditions != NULL)
 		{
