@@ -47,21 +47,40 @@ void partition_particles(void)
 	}
 }
 
-void prepare_particles(struct cell *cell)
+void prepare_particles(int cx, int cy, int cz)
 {
-	// temporary implementation, should take into account neighbors as well later.
-	n = pcount;
-	reallocate_sparticles();
-	for(int i = 0; i < pcount; i++)
+	n = 0;
+	for(int ox = -1; ox <= 1; ox++)
 	{
-		s[i] = particles[i].basic;
+		int x = cx + ox;
+		if(x < 0 || x >= ccount[0])
+		{
+			continue;
+		}
+		for(int oy = -1; oy <= 1; oy++)
+		{
+			int y = cy + oy;
+			if(y < 0 || y >= ccount[1])
+			{
+				continue;
+			}
+			for(int oz = -1; oz <= 1; oz++)
+			{
+				int z = cz + oz;
+				if(z < 0 || z >= ccount[2])
+				{
+					continue;
+				}
+				struct cell *cell = &cells[x][y][z];
+				for(int i = 0; i < cell->pcount; i++)
+				{
+					n++;
+					reallocate_sparticles();
+					s[n - 1] = cell->particles[i]->basic;
+				}
+			}
+		}
 	}
-/*	n = cell->pcount;
-	reallocate_sparticles();
-	for(int i = 0; i < cell->pcount; i++)
-	{
-		s[i] = cell->particles[i]->basic;
-	}*/
 }
 
 void compute_densities(void)
@@ -73,7 +92,7 @@ void compute_densities(void)
 			for(int z = 0; z < ccount[2]; z++)
 			{
 				struct cell *cell = &cells[x][y][z];
-				prepare_particles(cell);
+				prepare_particles(x, y, z);
 
 				for(int i = 0; i < cell->pcount; i++)
 				{
@@ -99,7 +118,7 @@ void compute_pressures(void)
 			for(int z = 0; z < ccount[2]; z++)
 			{
 				struct cell *cell = &cells[x][y][z];
-				prepare_particles(cell);
+				prepare_particles(x, y, z);
 
 				for(int i = 0; i < cell->pcount; i++)
 				{
@@ -125,7 +144,7 @@ void compute_accelerations(void)
 			for(int z = 0; z < ccount[2]; z++)
 			{
 				struct cell *cell = &cells[x][y][z];
-				prepare_particles(cell);
+				prepare_particles(x, y, z);
 
 				for(int i = 0; i < cell->pcount; i++)
 				{

@@ -25,7 +25,7 @@ void randomize_particles(void)
 	for(int i = 0; i < pcount; i++)
 	{
 		struct particle *particle = &particles[i];
-		particle->basic.m = 0.1 / pcount;
+		particle->basic.m = 1.0 / pcount;
 		for(int j = 0; j < 3; j++)
 		{
 			particle->basic.r[j] = ((double)(rand())) / RAND_MAX;
@@ -39,8 +39,7 @@ void update_particles_volrad(void)
 	{
 		struct particle *particle = &particles[i];
 		particle->volume = particle->basic.m / particle->basic.d;
-		//particle->radius = cbrt(0.75 * particle->volume / M_PI);
-		particle->radius = 0.05;
+		particle->radius = cbrt(0.75 * particle->volume / M_PI);
 		particle->basic.r[2] = 0.0;
 	}
 }
@@ -90,18 +89,18 @@ int main(void)
 {
 	printf("main program started\n");
 
-	h = 0.2;
+	h = 0.05;
 
-	pcount = 100;
+	pcount = 1000;
 	allocate_particles();
 
-	clength = 0.1;
-	ccount[0] = 10;
-	ccount[1] = 10;
+	clength = 0.05;
+	ccount[0] = 20;
+	ccount[1] = 20;
 	ccount[2] = 1;
 	allocate_cells();
 
-	n = 100;
+	n = 1000;
 	allocate_sparticles();
 
 	k = 0.01;
@@ -119,29 +118,7 @@ int main(void)
 	simulate_particles(false);
 	nt = 10;
 
-	compute_densities();/*
-	for(int i = 0; i < pcount; i++)
-	{
-		struct particle *particle = &particles[i];
-		printf("id=%d m=%f d=%f\n", particle->id, particle->basic.m, particle->basic.d);
-	}*/
-
-	/*printf("particles\n");
-	for(int i = 0; i < pcount; i++)
-	{
-		printf("%d %f %f\n", particles[i].id, particles[i].basic.m, particles[i].basic.r[2]);
-	}
-	printf("cells\n");
-	for(int x = 0; x < ccount[0]; x++)
-	{
-		for(int y = 0; y < ccount[1]; y++)
-		{
-			for(int z = 0; z < ccount[2]; z++)
-			{
-				printf("%d %f %d\n", cells[x][y][z].id, cells[x][y][z].center[1], cells[x][y][z].pcount);
-			}
-		}
-	}*/
+	compute_densities();
 
 	for(int f = 0; f < 100; f++)
 	{
@@ -170,7 +147,7 @@ int main(void)
 		for(int i = 0; i < pcount; i++)
 		{
 			struct particle *particle = &particles[i];
-			cairo_arc(context, particle->basic.r[0], particle->basic.r[1], particle->radius, 0, M_TAU);
+			cairo_arc(context, particle->basic.r[0], particle->basic.r[1], 0.01, 0, M_TAU);
 			cairo_set_source_rgb(context, 1.0, 1.0, 1.0);
 			cairo_fill_preserve(context);
 			cairo_set_line_width(context, 0.003);
