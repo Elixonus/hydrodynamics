@@ -51,6 +51,7 @@ void prepare_particles(struct cell *cell)
 {
 	// temporary implementation, should take into account neighbors as well later.
 	n = pcount;
+	reallocate_sparticles();
 	for(int i = 0; i < pcount; i++)
 	{
 		s[i] = particles[i].basic;
@@ -77,6 +78,7 @@ void compute_densities(void)
 				for(int i = 0; i < cell->pcount; i++)
 				{
 					struct particle *particle = cell->particles[i];
+					w = weight_poly6;
 					double dr = d(particle->basic.r);
 					particle->basic.d = dr;
 				}
@@ -128,8 +130,12 @@ void compute_accelerations(void)
 				for(int i = 0; i < cell->pcount; i++)
 				{
 					struct particle *particle = cell->particles[i];
+					w = weight_spiky;
+					gw = gradient_weight_auto;
 					double gpr[3];
 					gp(particle->basic.r, gpr);
+					w = weight_poly6;
+					lw = laplacian_weight_auto;
 					double lvr[3];
 					lv(particle->basic.r, lvr);
 					double aer[3] = {0.0, 0.0, 0.0};
@@ -149,13 +155,13 @@ void compute_accelerations(void)
 
 void (*integrator)(struct particle *particle, double dt);
 
-void integrate_particles(double dt, int nt)
+void integrate_particles(double dt, int ss)
 {
-	for(int it = 0; it < nt; it++)
+	for(int it = 0; it < ss; it++)
 	{
 		for(int i = 0; i < pcount; i++)
 		{
-			integrator(&particles[i], dt / nt);
+			integrator(&particles[i], dt / ss);
 		}
 	}
 }
@@ -181,11 +187,6 @@ void simulate_particles(bool resume)
 	{
 		fprintf(stderr, "error: basic particles not allocated\n");
 	}
-	if(w == NULL || gw == NULL || lw == NULL)
-	{
-		fprintf(stderr, "error: not all weight function pointers set\n");
-		exit(EXIT_FAILURE);
-	}
 	if(integrator == NULL)
 	{
 		fprintf(stderr, "error: integrator function pointer not set\n");
@@ -204,6 +205,7 @@ void simulate_particles(bool resume)
 		partition_particles();
 		compute_densities();
 		compute_pressures();
+
 		compute_accelerations();
 		integrate_particles(dt, 100);
 		t += dt;

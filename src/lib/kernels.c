@@ -81,23 +81,6 @@ double weight_spiky(double r[3])
 	return wr;
 }
 
-double weight_viscous(double r[3])
-{
-	double og = 15.0 / (2.0 * M_PI * pow(h, 3.0));
-	double mr = sqrt(pow(r[0], 2.0) + pow(r[1], 2.0) + pow(r[2], 2.0));
-	double wr;
-	if(mr < h)
-	{
-		wr = 0.0 - pow(mr, 3.0) / (2.0 * pow(h, 3.0)) - pow(mr, 2.0) / (2.0 * pow(h, 2.0)) + h / (2.0 * mr) - 1.0;
-	}
-	else
-	{
-		wr = 0.0;
-	}
-	wr *= og;
-	return wr;
-}
-
 double e = 1e-6;
 
 double ce(int c)

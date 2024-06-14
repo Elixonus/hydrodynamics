@@ -19,7 +19,7 @@ void compute_accelerations(void);
 
 extern void (*integrator)(struct particle *particle, double dt);
 
-void integrate_particles(double dt);
+void integrate_particles(double dt, int ss);
 
 extern double t;
 extern double dt;

@@ -25,7 +25,7 @@ void randomize_particles(void)
 	for(int i = 0; i < pcount; i++)
 	{
 		struct particle *particle = &particles[i];
-		particle->basic.m = 1.0 / pcount;
+		particle->basic.m = 0.1 / pcount;
 		for(int j = 0; j < 3; j++)
 		{
 			particle->basic.r[j] = ((double)(rand())) / RAND_MAX;
@@ -41,6 +41,7 @@ void update_particles_volrad(void)
 		particle->volume = particle->basic.m / particle->basic.d;
 		//particle->radius = cbrt(0.75 * particle->volume / M_PI);
 		particle->radius = 0.05;
+		particle->basic.r[2] = 0.0;
 	}
 }
 
@@ -54,10 +55,18 @@ void correct_particles(void)
 			if(particle->basic.r[j] < 0.0)
 			{
 				particle->basic.r[j] = 0.0;
+				if(particle->basic.v[j] < 0.0)
+				{
+					particle->basic.v[j] = 0.0;
+				}
 			}
 			else if(particle->basic.r[j] > clength * ccount[j])
 			{
 				particle->basic.r[j] = clength * ccount[j];
+				if(particle->basic.v[j] > 0.0)
+				{
+					particle->basic.v[j] = 0.0;
+				}
 			}
 		}
 	}
@@ -65,7 +74,7 @@ void correct_particles(void)
 
 double *acceleration_gravity(double r[3], double b[3])
 {
-	double ag[3] = {0, -0.1, 0};
+	double ag[3] = {0, -0.01, 0};
 	for(int j = 0; j < 3; j++)
 	{
 		b[j] = ag[j];
@@ -82,9 +91,6 @@ int main(void)
 	printf("main program started\n");
 
 	h = 0.2;
-	w = weight_cubic_spline;
-	gw = gradient_weight_auto;
-	lw = laplacian_weight_auto;
 
 	pcount = 100;
 	allocate_particles();
@@ -98,9 +104,9 @@ int main(void)
 	n = 100;
 	allocate_sparticles();
 
-	k = 0.001;
-	d0 = 1.0;
-	u = 0.0;
+	k = 0.01;
+	d0 = 0.1;
+	u = 0.1;
 	t = 0.0;
 	dt = 0.01;
 	nt = 0;
