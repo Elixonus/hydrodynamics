@@ -10,6 +10,7 @@
 #include "lib/simulation.h"
 #include "lib/storage.h"
 #include "lib/memory.h"
+#include "lib/colormap.h"
 
 #ifndef M_PI
 #define M_PI 3.1415926535
@@ -30,6 +31,7 @@ void randomize_particles(void)
 		{
 			particle->basic.r[j] = ((double)(rand())) / RAND_MAX;
 		}
+		particle->basic.v[0] = 0.1;
 	}
 }
 
@@ -89,14 +91,14 @@ int main(void)
 {
 	printf("main program started\n");
 
-	h = 0.05;
+	h = 0.04;
 
 	pcount = 1000;
 	allocate_particles();
 
-	clength = 0.05;
-	ccount[0] = 20;
-	ccount[1] = 20;
+	clength = 0.04;
+	ccount[0] = 25;
+	ccount[1] = 25;
 	ccount[2] = 1;
 	allocate_cells();
 
@@ -119,6 +121,8 @@ int main(void)
 	nt = 10;
 
 	compute_densities();
+
+	load_colormap();
 
 	for(int f = 0; f < 100; f++)
 	{
@@ -148,10 +152,23 @@ int main(void)
 		{
 			struct particle *particle = &particles[i];
 			cairo_arc(context, particle->basic.r[0], particle->basic.r[1], 0.01, 0, M_TAU);
-			cairo_set_source_rgb(context, 1.0, 1.0, 1.0);
+			double speed = 0.0;
+			for(int j = 0; j < 3; j++)
+			{
+				speed += pow(particle->basic.v[j], 2);
+			}
+			speed = sqrt(speed);
+			double value = 10 * speed;
+			int index = index_colormap(value);
+			float color[3] = {
+					colors[index][0],
+					colors[index][1],
+					colors[index][2]
+			};
+			cairo_set_source_rgb(context, color[0], color[1], color[2]);
 			cairo_fill_preserve(context);
 			cairo_set_line_width(context, 0.003);
-			cairo_set_source_rgb(context, 0.0, 0.0, 0.0);
+			cairo_set_source_rgb(context, 1.0, 1.0, 1.0);
 			cairo_stroke(context);
 		}
 

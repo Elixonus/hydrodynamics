@@ -2,5 +2,5 @@
 mkdir -p out
 mkdir -p out/img
 ./bin/fluid
-ffmpeg -i "out/img/%05d.png" -y "out/video.mp4" -framerate 60
+ffmpeg -framerate 60 -i "out/img/%05d.png" -y "out/video.mp4"
 rm -f out/img/*.png
