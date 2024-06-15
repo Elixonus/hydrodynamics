@@ -51,23 +51,28 @@ void correct_particles(void)
 	for(int i = 0; i < pcount; i++)
 	{
 		struct particle *particle = &particles[i];
-		for(int j = 0; j < 3; j++)
+		if(particle->basic.r[0] < 0.0)
 		{
-			if(particle->basic.r[j] < 0.0)
+			particle->basic.r[0] = 0.0;
+			for(int j = 0; j < 3; j++)
 			{
-				particle->basic.r[j] = 0.0;
-				if(particle->basic.v[j] < 0.0)
-				{
-					particle->basic.v[j] = 0.0;
-				}
+				particle->basic.v[j] = 0.0;
 			}
-			else if(particle->basic.r[j] > clength * ccount[j])
+		}
+		else if(particle->basic.r[0] > clength * ccount[0])
+		{
+			particle->basic.r[0] = clength * ccount[0];
+			for(int j = 0; j < 3; j++)
 			{
-				particle->basic.r[j] = clength * ccount[j];
-				if(particle->basic.v[j] > 0.0)
-				{
-					particle->basic.v[j] = 0.0;
-				}
+				particle->basic.v[j] = 0.0;
+			}
+		}
+		if(particle->basic.r[1] < 0.0)
+		{
+			particle->basic.r[1] = 0.0;
+			if(particle->basic.v[1] < 0.0)
+			{
+				particle->basic.v[1] = 0.0;
 			}
 		}
 	}
@@ -75,7 +80,7 @@ void correct_particles(void)
 
 double *acceleration_gravity(double r[3], double b[3])
 {
-	double ag[3] = {0, -0.01, 0};
+	double ag[3] = {0, -0.1, 0};
 	for(int j = 0; j < 3; j++)
 	{
 		b[j] = ag[j];
@@ -98,15 +103,15 @@ int main(void)
 
 	clength = 0.04;
 	ccount[0] = 25;
-	ccount[1] = 25;
+	ccount[1] = 35;
 	ccount[2] = 1;
 	allocate_cells();
 
 	n = 1000;
 	allocate_sparticles();
 
-	k = 0.01;
-	d0 = 0.1;
+	k = 0.1;
+	d0 = 10.0;
 	u = 0.1;
 	t = 0.0;
 	dt = 0.01;
