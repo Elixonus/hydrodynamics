@@ -133,7 +133,7 @@ void compute_pressures(void)
 }
 
 double u;
-double *(*acceleration_external)(double r[3], double b[3]);
+double *(*acceleration_external)(double r[3]);
 
 void compute_accelerations(void)
 {
@@ -151,16 +151,14 @@ void compute_accelerations(void)
 					struct particle *particle = cell->particles[i];
 					w = weight_spiky;
 					gw = gradient_weight_auto;
-					double gpr[3];
-					gp(particle->basic.r, gpr);
+					double *gpr = gp(particle->basic.r);
 					w = weight_poly6;
 					lw = laplacian_weight_auto;
-					double lvr[3];
-					lv(particle->basic.r, lvr);
-					double aer[3] = {0.0, 0.0, 0.0};
+					double *lvr = lv(particle->basic.r);
+					double *aer;
 					if(acceleration_external != NULL)
 					{
-						acceleration_external(particle->basic.r, aer);
+						aer = acceleration_external(particle->basic.r);
 					}
 					for(int j = 0; j < 3; j++)
 					{

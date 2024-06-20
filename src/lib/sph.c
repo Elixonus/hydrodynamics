@@ -12,8 +12,8 @@ int n;
 struct s *s;
 
 double (*w)(double[3]);
-double *(*gw)(double[3], double[3]);
-double *(*lw)(double[3], double[3]);
+double *(*gw)(double[3]);
+double *(*lw)(double[3]);
 
 double d(double r[3])
 {
@@ -47,9 +47,9 @@ double p(double r[3])
 	return pr;
 }
 
-double *v(double r[3], double b[3])
+double *v(double r[3])
 {
-	double vr[3] = {0.0, 0.0, 0.0};
+	static double vr[3] = {0.0, 0.0, 0.0};
 	for(int i = 0; i < n; i++)
 	{
 		double rw[3];
@@ -63,18 +63,14 @@ double *v(double r[3], double b[3])
 			vr[c] += s[i].m * s[i].v[c] / s[i].d * wr;
 		}
 	}
-	for(int c = 0; c < 3; c++)
-	{
-		b[c] = vr[c];
-	}
-	return b;
+	return vr;
 }
 
 double *gp(double r[3], double b[3])
 {
 	double dr = d(r);
 	double pr = p(r);
-	double gpr[3] = {0.0, 0.0, 0.0};
+	static double gpr[3] = {0.0, 0.0, 0.0};
 	for(int i = 0; i < n; i++)
 	{
 		double rw[3];
@@ -82,25 +78,19 @@ double *gp(double r[3], double b[3])
 		{
 			rw[c] = r[c] - s[i].r[c];
 		}
-		double gwr[3];
-		gw(rw, gwr);
+		double *gwr = gw(rw);
 		for(int c = 0; c < 3; c++)
 		{
 			gpr[c] += s[i].m * (s[i].p / s[i].d * dr / s[i].d + pr / dr) * gwr[c];
 		}
 	}
-	for(int c = 0; c < 3; c++)
-	{
-		b[c] = gpr[c];
-	}
-	return b;
+	return gpr;
 }
 
 double *lv(double r[3], double b[3])
 {
-	double vr[3];
-	v(r, vr);
-	double lvr[3] = {0.0, 0.0, 0.0};
+	double *vr = v(r);
+	static double lvr[3] = {0.0, 0.0, 0.0};
 	for(int i = 0; i < n; i++)
 	{
 		double rw[3];
@@ -108,16 +98,11 @@ double *lv(double r[3], double b[3])
 		{
 			rw[c] = r[c] - s[i].r[c];
 		}
-		double lwr[3];
-		lw(rw, lwr);
+		double *lwr = lw(rw);
 		for(int c = 0; c < 3; c++)
 		{
 			lvr[c] += s[i].m * (s[i].v[c] - vr[c]) / s[i].d * lwr[c];
 		}
 	}
-	for(int c = 0; c < 3; c++)
-	{
-		b[c] = lvr[c];
-	}
-	return b;
+	return lvr;
 }

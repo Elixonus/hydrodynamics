@@ -49,7 +49,7 @@ void reallocate_particles(void)
 		}
 		for(int i = pcount; i < pmemory / sizeof(struct particle); i++)
 		{
-			struct particle *particle = &particles[i];
+			struct particle *particle = &swap[i];
 			initialize_particle(particle);
 		}
 		printf("reallocated to %d particles with %dB of memory\n", (int)(pmemory / sizeof(struct particle)), (int)(pmemory));
@@ -86,6 +86,10 @@ void reallocate_cparticles(struct cell *cell)
 		{
 			fprintf(stderr, "error: failed to reallocate cell particles with %dB of memory\n", (int)(cell->pmemory));
 			exit(EXIT_FAILURE);
+		}
+		for(int i = cell->pcount; i < cell->pmemory / sizeof(struct particle *); i++)
+		{
+			swap[i] = NULL;
 		}
 		// printf("reallocated to %d cell particles with %dB of memory\n", (int)(cell->pmemory / sizeof(struct particle *)), (int)(cell->pmemory));
 		cell->particles = swap;
@@ -218,7 +222,7 @@ void reallocate_sparticles(void)
 		}
 		for(int i = n; i < smemory / sizeof(struct s); i++)
 		{
-			struct s *si = &s[i];
+			struct s *si = &swap[i];
 			initialize_sparticle(si);
 		}
 		printf("reallocated to %d basic particles with %dB of memory\n", (int)(smemory / sizeof(struct s)), (int)(smemory));

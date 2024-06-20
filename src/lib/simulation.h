@@ -5,6 +5,8 @@ extern double clength;
 
 void partition_particles(void);
 
+void prepare_particles(int cx, int cy, int cz);
+
 void compute_densities(void);
 
 extern double d0;
@@ -13,7 +15,7 @@ extern double k;
 void compute_pressures(void);
 
 extern double u;
-extern double *(*acceleration_external)(double r[3], double b[3]);
+extern double *(*acceleration_external)(double r[3]);
 
 void compute_accelerations(void);
 
