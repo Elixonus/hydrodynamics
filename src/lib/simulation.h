@@ -15,7 +15,7 @@ extern double k;
 void compute_pressures(void);
 
 extern double u;
-extern double *(*acceleration_external)(double r[3]);
+extern double *(*acceleration_external)(double r[3], double b[3]);
 
 void compute_accelerations(void);
 

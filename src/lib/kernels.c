@@ -93,9 +93,9 @@ double ce(int c)
 	return ced;
 }
 
-double *gradient_weight_auto(double r[3])
+double *gradient_weight_auto(double r[3], double b[3])
 {
-	static double gwr[3];
+	double gwr[3];
 	for(int i = 0; i < 3; i++)
 	{
 		double res[2][3];
@@ -106,12 +106,16 @@ double *gradient_weight_auto(double r[3])
 		}
 		gwr[i] = (w(res[0]) - w(res[1])) / (2 * e);
 	}
-	return gwr;
+	for(int c = 0; c < 3; c++)
+	{
+		b[c] = gwr[c];
+	}
+	return b;
 }
 
-double *laplacian_weight_auto(double r[3])
+double *laplacian_weight_auto(double r[3], double b[3])
 {
-	static double lwr[3];
+	double lwr[3];
 	for(int i = 0; i < 3; i++)
 	{
 		double res[2][3];
@@ -122,5 +126,9 @@ double *laplacian_weight_auto(double r[3])
 		}
 		lwr[i] = (w(res[0]) - 2 * w(r) + w(res[1])) / (e * e);
 	}
-	return lwr;
+	for(int c = 0; c < 3; c++)
+	{
+		b[c] = lwr[c];
+	}
+	return b;
 }

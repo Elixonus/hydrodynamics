@@ -77,10 +77,14 @@ void correct_particles(void)
 	}
 }
 
-double *acceleration_gravity(double r[3])
+double *acceleration_gravity(double r[3], double b[3])
 {
-	static double ag[3] = {0, -0.5, 0};
-	return ag;
+	double ag[3] = {0, -0.5, 0};
+	for(int c = 0; c < 3; c++)
+	{
+		b[c] = ag[c];
+	}
+	return b;
 }
 
 int width = 1000;
@@ -93,7 +97,7 @@ int main(void)
 
 	h = 0.02;
 
-	pcount = 1000;
+	pcount = 500;
 	allocate_particles();
 
 	clength = 0.02;
@@ -111,7 +115,6 @@ int main(void)
 	t = 0.0;
 	dt = 0.00016666666;
 	nt = 0;
-	acceleration_external = NULL;
 	integrator = integrate_euler_explicit;
 	initial_conditions = randomize_particles;
 	boundary_conditions = correct_particles;
