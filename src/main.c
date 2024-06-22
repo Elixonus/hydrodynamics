@@ -15,11 +15,10 @@
 #ifndef M_PI
 #define M_PI 3.1415926535
 #endif
+
 #ifndef M_TAU
 #define M_TAU 6.283185307
 #endif
-
-// TODO: Fix slow computation time.
 
 void randomize_particles(void)
 {
@@ -28,9 +27,14 @@ void randomize_particles(void)
 	{
 		struct particle *particle = &particles[i];
 		particle->basic.m = 1.0 / pcount;
-		particle->basic.r[0] = 0.5 * ((double)(rand())) / RAND_MAX;
+		particle->basic.r[0] = 0.5 * (((double)(rand())) / RAND_MAX);
 		particle->basic.r[1] = ((double)(rand())) / RAND_MAX;
+		particle->basic.r[2] = 0.0;
 		particle->basic.v[0] = 0.1;
+		for(int j = 1; j < 3; j++)
+		{
+			particle->basic.v[j] = 0.0;
+		}
 	}
 }
 
@@ -79,10 +83,10 @@ void correct_particles(void)
 
 double *acceleration_gravity(double r[3], double b[3])
 {
-	double ag[3] = {0, -0.5, 0};
-	for(int c = 0; c < 3; c++)
+	double ag[3] = {0, -0.1, 0};
+	for(int j = 0; j < 3; j++)
 	{
-		b[c] = ag[c];
+		b[j] = ag[j];
 	}
 	return b;
 }
@@ -95,33 +99,34 @@ int main(void)
 {
 	printf("main program started\n");
 
-	h = 0.02;
+	h = 0.04;
 
-	pcount = 500;
+	pcount = 1000;
 	allocate_particles();
 
-	clength = 0.02;
-	ccount[0] = 50;
-	ccount[1] = 70;
+	clength = 0.04;
+	ccount[0] = 25;
+	ccount[1] = 35;
 	ccount[2] = 1;
 	allocate_cells();
 
-	n = 500;
+	n = 1000;
 	allocate_sparticles();
 
-	k = 0.3;
+	k = 0.1;
 	d0 = 10.0;
-	u = 0.0;
+	u = 0.1;
 	t = 0.0;
-	dt = 0.00016666666;
+	dt = 0.01;
 	nt = 0;
+	acceleration_external = NULL;
 	integrator = integrate_euler_explicit;
 	initial_conditions = randomize_particles;
 	boundary_conditions = correct_particles;
 	acceleration_external = acceleration_gravity;
 
 	simulate_particles(false);
-	nt = 100;
+	nt = 10;
 
 	compute_densities();
 
