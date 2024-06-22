@@ -85,6 +85,14 @@ void prepare_particles(int cx, int cy, int cz)
 
 void compute_densities(void)
 {
+	for(int p = 0; p < pcount; p++)
+	{
+		struct particle *particle = &particles[p];
+		if(fabs(particle->basic.d) < fabs(1e-9))
+		{
+			particle->basic.d = 1e-9;
+		}
+	}
 	for(int x = 0; x < ccount[0]; x++)
 	{
 		for(int y = 0; y < ccount[1]; y++)
@@ -224,7 +232,6 @@ void simulate_particles(bool resume)
 		partition_particles();
 		compute_densities();
 		compute_pressures();
-
 		compute_accelerations();
 		integrate_particles(dt, 100);
 		t += dt;

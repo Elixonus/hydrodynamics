@@ -110,7 +110,7 @@ int main(void)
 	ccount[2] = 1;
 	allocate_cells();
 
-	n = 1000;
+	n = 1;
 	allocate_sparticles();
 
 	k = 0.1;
