@@ -1,8 +1,5 @@
-bin/
-out/
-
-# IDE
-# .idea/
+bin
+tmp
 
 # Prerequisites
 *.d

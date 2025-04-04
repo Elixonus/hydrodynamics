@@ -1,11 +1,9 @@
 #!/bin/bash
-mkdir -p bin
-mkdir -p bin/obj
-gcc -c src/lib/sph.c -o bin/obj/sph.o -std=c2x
-gcc -c src/lib/kernels.c -o bin/obj/kernels.o -std=c2x
-gcc -c src/lib/integrators.c -o bin/obj/integrators.o -std=c2x
-gcc -c src/lib/simulation.c -o bin/obj/simulation.o -std=c2x
-gcc -c src/lib/storage.c -o bin/obj/storage.o -std=c2x
-gcc -c src/lib/memory.c -o bin/obj/memory.o -std=c2x
-gcc -c src/lib/colormap.c -o bin/obj/colormap.o -std=c2x
-gcc src/main.c -o bin/fluid bin/obj/sph.o bin/obj/kernels.o bin/obj/integrators.o bin/obj/simulation.o bin/obj/storage.o bin/obj/memory.o bin/obj/colormap.o -lm $(pkg-config --cflags --libs cairo) -std=c2x
+echo "creating executables"
+shopt -s expand_aliases
+alias gcc="gcc-14"
+mkdir bin
+gcc -c src/sph.c -o bin/sph.o -std=c23
+gcc src/solvetruss.c -o bin/solvetruss bin/dampspring.o -lm -std=c23
+gcc src/rendertruss.c -o bin/rendertruss bin/dampspring.o -lm $(pkg-config --cflags --libs cairo) -std=c23
+echo "executables can now be found in bin/"
