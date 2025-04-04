@@ -7,6 +7,7 @@
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
+    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
     <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppFormatterOtherPage" type="string" />
   </component>
   <component name="CMakeProjectFlavorService">
@@ -19,30 +20,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aee5c749-37cf-4b8e-88ae-ff925f2c3df6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sph.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/maelstrom.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fluid.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fluid.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fluid.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/colormap.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/colormap.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/integrators.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/integrators.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/kernels.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/kernels.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/memory.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/memory.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/simulation.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/simulation.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/sph.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/sph.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/storage.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/storage.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,11 +58,11 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Elias Dobrin/Documents/GitHub/dampspring&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Elias Dobrin/Documents/GitHub/hydrodynamics&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.Shell Script&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C/C++&quot;
   }
 }</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -94,6 +79,9 @@
       <workItem from="1743734764122" duration="83000" />
       <workItem from="1743734860771" duration="335000" />
       <workItem from="1743735212877" duration="58000" />
+      <workItem from="1743735327523" duration="1989000" />
+      <workItem from="1743742056992" duration="20000" />
+      <workItem from="1743742079831" duration="11000" />
     </task>
     <servers />
   </component>
