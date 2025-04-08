@@ -9,7 +9,7 @@ struct particle
 	double velocity[2];
 };
 
-double pdensity(
+double fdensity(
 	int count,
 	struct particle **particles,
 	double point[2],
@@ -20,15 +20,15 @@ double pdensity(
 	for(int p = 0; p < count; p++)
 	{
 		double displacement[2];
-		for(int c = 0; c < 2; c++)
-			displacement[c] = point[c] - particles[p]->position[c];
+		for(int a = 0; a < 2; a++)
+			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
 		density += particles[p]->mass * weight;
 	}
 	return density;
 }
 
-double ppressure(
+double fpressure(
 	int count,
 	struct particle **particles,
 	double point[2],
@@ -39,8 +39,8 @@ double ppressure(
 	for(int p = 0; p < count; p++)
 	{
 		double displacement[2];
-		for(int c = 0; c < 2; c++)
-			displacement[c] = point[c] - particles[p]->position[c];
+		for(int a = 0; a < 2; a++)
+			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
 		pressure += (
 			particles[p]->mass *
@@ -51,91 +51,82 @@ double ppressure(
 	return pressure;
 }
 
-double *pvelocity(
+double *fvelocity(
 	int count,
 	struct particle **particles,
 	double point[2],
 	double (*weightf)(double point[2]),
-	double buffer[2]
+	double velocity[2]
 )
 {
-	double velocity[2] = {0.0, 0.0};
+	for(int a = 0; a < 2; a++) velocity[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
 		double displacement[2];
-		for(int c = 0; c < 2; c++)
-			displacement[c] = point[c] - particles[p]->position[c];
+		for(int a = 0; a < 2; a++)
+			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
-		for(int c = 0; c < 2; c++)
-			velocity[c] += (
+		for(int a = 0; a < 2; a++)
+			velocity[a] += (
 				particles[p]->mass *
-				particles[p]->velocity[c] /
+				particles[p]->velocity[a] /
 				particles[p]->density
 			) * weight;
 	}
-	for(int c = 0; c < 2; c++)
-		buffer[c] = velocity[c];
-	return buffer;
 }
 
-double *ppressureg(
+double *fpressureg(
 	int count,
 	struct particle **particles,
 	double point[2],
 	double (*weightf)(double point[2]),
-	double *(*weightgf)(double point[2], double buffer[2]),
-	double buffer[2]
+	double *(*weightgf)(double point[2], double weightg[2]),
+	double pressureg[2]
 )
 {
-	double density = pdensity(count, particles, point, weightf);
-	double pressure = ppressure(count, particles, point, weightf);
-	double pressureg[2] = {0.0, 0.0};
+	double density = fdensity(count, particles, point, weightf);
+	double pressure = fpressure(count, particles, point, weightf);
+	for(int a = 0; a < 2; a++) pressureg[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
 		double displacement[2];
-		for(int c = 0; c < 2; c++)
-			displacement[c] = point[c] - particles[p]->position[c];
+		for(int a = 0; a < 2; a++)
+			displacement[a] = point[a] - particles[p]->position[a];
 		double weightg[2];
 		weightgf(displacement, weightg);
-		for(int c = 0; c < 2; c++)
-			pressureg[c] += particles[p]->mass * (
+		for(int a = 0; a < 2; a++)
+			pressureg[a] += particles[p]->mass * (
 				particles[p]->pressure / particles[p]->density *
 				density / particles[p]->density +
 				pressure / density
-			) * weightg[c];
+			) * weightg[a];
 	}
-	for(int c = 0; c < 2; c++)
-		buffer[c] = pressureg[c];
-	return buffer;
 }
 
-double *pvelocityl(
+double *fvelocityl(
 	int count,
 	struct particle **particles,
 	double point[2],
 	double (*weightf)(double point[2]),
-	double *(*weightlf)(double point[2], double buffer[2]),
-	double buffer[2]
+	double *(*weightlf)(double point[2], double weightl[2]),
+	double velocityl[2]
 )
 {
 	double velocity[2];
-	pvelocity(count, particles, point, weightf, velocity);
-	double velocityl[2] = {0.0, 0.0};
+	fvelocity(count, particles, point, weightf, velocity);
+	for(int a = 0; a < 2; a++) velocityl[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
 		double displacement[2];
-		for(int c = 0; c < 2; c++)
-			displacement[c] = point[c] - particles[p]->position[c];
+		for(int a = 0; a < 2; a++)
+			displacement[a] = point[a] - particles[p]->position[a];
 		double weightl[2];
 		weightlf(displacement, weightl);
-		for(int c = 0; c < 2; c++)
-			velocityl[c] += (
+		for(int a = 0; a < 2; a++)
+			velocityl[a] += (
 				particles[p]->mass *
-				(particles[p]->velocity[c] - velocity[c]) /
+				(particles[p]->velocity[a] - velocity[a]) /
 				particles[p]->density
-			) * weightl[c];
+			) * weightl[a];
 	}
-	for(int c = 0; c < 2; c++)
-		buffer[c] = velocityl[c];
-	return buffer;
 }
