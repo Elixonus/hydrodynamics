@@ -1,26 +1,26 @@
-#include <math.h>
+#ifdef SPHAXES
 
 struct particle
 {
 	double mass;
 	double density;
 	double pressure;
-	double position[2];
-	double velocity[2];
+	double position[SPHAXES];
+	double velocity[SPHAXES];
 };
 
-double fdensity(
-	int count,
+double sdensity(
 	struct particle **particles,
-	double point[2],
-	double (*weightf)(double point[2])
+	int count,
+	double point[SPHAXES],
+	double (*weightf)(double point[SPHAXES])
 )
 {
 	double density = 0.0;
 	for(int p = 0; p < count; p++)
 	{
-		double displacement[2];
-		for(int a = 0; a < 2; a++)
+		double displacement[SPHAXES];
+		for(int a = 0; a < SPHAXES; a++)
 			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
 		density += particles[p]->mass * weight;
@@ -28,18 +28,18 @@ double fdensity(
 	return density;
 }
 
-double fpressure(
-	int count,
+double spressure(
 	struct particle **particles,
-	double point[2],
-	double (*weightf)(double point[2])
+	int count,
+	double point[SPHAXES],
+	double (*weightf)(double point[SPHAXES])
 )
 {
 	double pressure = 0.0;
 	for(int p = 0; p < count; p++)
 	{
-		double displacement[2];
-		for(int a = 0; a < 2; a++)
+		double displacement[SPHAXES];
+		for(int a = 0; a < SPHAXES; a++)
 			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
 		pressure += (
@@ -51,22 +51,22 @@ double fpressure(
 	return pressure;
 }
 
-double *fvelocity(
-	int count,
+void svelocity(
 	struct particle **particles,
-	double point[2],
-	double (*weightf)(double point[2]),
-	double velocity[2]
+	int count,
+	double point[SPHAXES],
+	double velocity[SPHAXES],
+	double (*weightf)(double point[SPHAXES])
 )
 {
-	for(int a = 0; a < 2; a++) velocity[a] = 0.0;
+	for(int a = 0; a < SPHAXES; a++) velocity[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
-		double displacement[2];
-		for(int a = 0; a < 2; a++)
+		double displacement[SPHAXES];
+		for(int a = 0; a < SPHAXES; a++)
 			displacement[a] = point[a] - particles[p]->position[a];
 		double weight = weightf(displacement);
-		for(int a = 0; a < 2; a++)
+		for(int a = 0; a < SPHAXES; a++)
 			velocity[a] += (
 				particles[p]->mass *
 				particles[p]->velocity[a] /
@@ -75,26 +75,26 @@ double *fvelocity(
 	}
 }
 
-double *fpressureg(
-	int count,
+void spressureg(
 	struct particle **particles,
-	double point[2],
-	double (*weightf)(double point[2]),
-	double *(*weightgf)(double point[2], double weightg[2]),
-	double pressureg[2]
+	int count,
+	double point[SPHAXES],
+	double pressureg[SPHAXES],
+	double (*weightf)(double point[SPHAXES]),
+	void (*weightgf)(double point[SPHAXES], double weightg[SPHAXES])
 )
 {
-	double density = fdensity(count, particles, point, weightf);
-	double pressure = fpressure(count, particles, point, weightf);
-	for(int a = 0; a < 2; a++) pressureg[a] = 0.0;
+	double density = sdensity(particles, count, point, weightf);
+	double pressure = spressure(particles, count, point, weightf);
+	for(int a = 0; a < SPHAXES; a++) pressureg[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
-		double displacement[2];
-		for(int a = 0; a < 2; a++)
+		double displacement[SPHAXES];
+		for(int a = 0; a < SPHAXES; a++)
 			displacement[a] = point[a] - particles[p]->position[a];
-		double weightg[2];
+		double weightg[SPHAXES];
 		weightgf(displacement, weightg);
-		for(int a = 0; a < 2; a++)
+		for(int a = 0; a < SPHAXES; a++)
 			pressureg[a] += particles[p]->mass * (
 				particles[p]->pressure / particles[p]->density *
 				density / particles[p]->density +
@@ -103,26 +103,26 @@ double *fpressureg(
 	}
 }
 
-double *fvelocityl(
-	int count,
+void svelocityl(
 	struct particle **particles,
-	double point[2],
-	double (*weightf)(double point[2]),
-	double *(*weightlf)(double point[2], double weightl[2]),
-	double velocityl[2]
+	int count,
+	double point[SPHAXES],
+	double velocityl[SPHAXES],
+	double (*weightf)(double point[SPHAXES]),
+	void (*weightlf)(double point[SPHAXES], double weightl[SPHAXES])
 )
 {
-	double velocity[2];
-	fvelocity(count, particles, point, weightf, velocity);
-	for(int a = 0; a < 2; a++) velocityl[a] = 0.0;
+	double velocity[SPHAXES];
+	svelocity(particles, count, point, velocity, weightf);
+	for(int a = 0; a < SPHAXES; a++) velocityl[a] = 0.0;
 	for(int p = 0; p < count; p++)
 	{
-		double displacement[2];
-		for(int a = 0; a < 2; a++)
+		double displacement[SPHAXES];
+		for(int a = 0; a < SPHAXES; a++)
 			displacement[a] = point[a] - particles[p]->position[a];
-		double weightl[2];
+		double weightl[SPHAXES];
 		weightlf(displacement, weightl);
-		for(int a = 0; a < 2; a++)
+		for(int a = 0; a < SPHAXES; a++)
 			velocityl[a] += (
 				particles[p]->mass *
 				(particles[p]->velocity[a] - velocity[a]) /
@@ -130,3 +130,5 @@ double *fvelocityl(
 			) * weightl[a];
 	}
 }
+
+#endif
