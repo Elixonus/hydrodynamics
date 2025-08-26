@@ -19,9 +19,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aee5c749-37cf-4b8e-88ae-ff925f2c3df6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sph.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/sph.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sph.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/sph.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sph.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/sph.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,9 +54,9 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="ProjectStatusUIService"><![CDATA[{
-  "uiKindId": "Widget"
-}]]></component>
+  <component name="ProjectStatusUIService">{
+  &quot;uiKindId&quot;: &quot;Widget&quot;
+}</component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -83,6 +84,9 @@
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Elias Dobrin\Documents\GitHub\hydrodynamics" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Elias Dobrin\Documents\GitHub\hydrodynamics\src\lib" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -114,7 +118,14 @@
       <workItem from="1744920103653" duration="354000" />
       <workItem from="1744937746024" duration="381000" />
       <workItem from="1755624777359" duration="4077000" />
-      <workItem from="1755630055616" duration="2309000" />
+      <workItem from="1755630055616" duration="3939000" />
+      <workItem from="1755801443578" duration="60000" />
+      <workItem from="1756236786837" duration="2579000" />
+      <workItem from="1756333780605" duration="263000" />
+      <workItem from="1756335095533" duration="1225000" />
+      <workItem from="1756397397451" duration="841000" />
+      <workItem from="1756400569649" duration="1182000" />
+      <workItem from="1756406794307" duration="106000" />
     </task>
     <servers />
   </component>

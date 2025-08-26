@@ -1,5 +1,5 @@
-#ifndef SPHHEADER
-#define SPHHEADER
+#pragma once
+
 #ifdef SPHAXES
 
 struct particle
@@ -15,21 +15,21 @@ double sdensity(
 	struct particle **particles,
 	int count,
 	double point[SPHAXES],
-	double (*weightf)(double offset[SPHAXES])
+	double (*weightf)(double radius)
 );
 
 double spressure(
 	struct particle **particles,
 	int count,
 	double point[SPHAXES],
-	double (*weightf)(double offset[SPHAXES])
+	double (*weightf)(double radius)
 );
 
 void svelocity(
 	struct particle **particles,
 	int count,
 	double point[SPHAXES],
-	double (*weightf)(double offset[SPHAXES]),
+	double (*weightf)(double radius),
 	double result[SPHAXES]
 );
 
@@ -37,8 +37,8 @@ void spressureg(
 	struct particle **particles,
 	int count,
 	double point[SPHAXES],
-	double (*weightf)(double offset[SPHAXES]),
-	void (*weightgf)(double offset[SPHAXES], double weightg[SPHAXES]),
+	double (*weightf)(double radius),
+	void (*weightgf)(double radius, double result[SPHAXES]),
 	double result[SPHAXES]
 );
 
@@ -46,10 +46,9 @@ void svelocityl(
 	struct particle **particles,
 	int count,
 	double point[SPHAXES],
-	double (*weightf)(double offset[SPHAXES]),
-	void (*weightlf)(double offset[SPHAXES], double weightl[SPHAXES]),
+	double (*weightf)(double radius),
+	void (*weightlf)(double radius, double result[SPHAXES]),
 	double result[SPHAXES]
 );
 
-#endif
 #endif
